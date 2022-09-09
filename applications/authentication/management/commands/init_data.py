@@ -3,7 +3,7 @@ from django.contrib.auth.models import Group
 from django.core.management.base import BaseCommand
 from django.db import transaction
 
-from applications.common.constants import GROUPS
+from applications.authentication.constants import GROUPS
 
 
 class Command(BaseCommand):

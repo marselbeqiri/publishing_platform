@@ -3,10 +3,12 @@ from django.contrib import admin
 from django.urls import path, include
 
 api_patterns = [
+    path('auth/', include('applications.authentication.urls'), name="authentication"),
 ]
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('api/', include(api_patterns)),
 ]
 
 if settings.DEBUG:
