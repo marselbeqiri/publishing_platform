@@ -4,6 +4,7 @@ from django.urls import path, include
 
 api_patterns = [
     path('auth/', include('applications.authentication.urls'), name="authentication"),
+    path('publishing/', include('applications.publishing.urls'), name="publishing"),
 ]
 
 urlpatterns = [
