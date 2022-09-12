@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     # Internal
     'applications.common',
     'applications.authentication',
+    'applications.publishing',
 ]
 
 MIDDLEWARE = [
