@@ -32,3 +32,7 @@ class User(AbstractUser):
 
     def is_blogger(self) -> bool:
         return self.groups.filter(name=GROUPS.BLOGGER).exists()
+
+    @property
+    def total_posts(self):
+        return self.posts.count()

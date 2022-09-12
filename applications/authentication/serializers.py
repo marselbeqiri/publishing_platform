@@ -32,6 +32,7 @@ class UserInfoSerializer(serializers.ModelSerializer):
     full_name = serializers.CharField(read_only=True, source="get_full_name")
     list_of_interests = serializers.StringRelatedField(many=True, source='interests', read_only=True)
     groups = serializers.StringRelatedField(many=True, read_only=True)
+    total_posts = serializers.IntegerField(read_only=True)
 
     # Write Fields
     short_biography = NonNullableCharField(allow_blank=True, required=False)
@@ -45,6 +46,7 @@ class UserInfoSerializer(serializers.ModelSerializer):
             "full_name",
             "groups",
             "list_of_interests",
+            "total_posts",
             # Write Fields
             "first_name",
             "last_name",
@@ -56,7 +58,6 @@ class UserInfoSerializer(serializers.ModelSerializer):
             "interests",
         ]
         extra_kwargs = {'interests': {'write_only': True, 'required': False}}
-
 
 
 class RegistrationSerializer(serializers.ModelSerializer):
