@@ -15,8 +15,8 @@ class PostChoices(models.IntegerChoices):
 class Post(AggregateModel):
     post_choices = PostChoices
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    title = models.CharField(verbose_name="Post title", max_length=255)
-    content = models.TextField(verbose_name="Post Content")
+    title = models.CharField(verbose_name="Post title", max_length=100)
+    content = models.CharField(verbose_name="Post Content", max_length=1000)
     slug = models.CharField(verbose_name="Post slug", max_length=255)
     version = models.PositiveIntegerField(verbose_name="Event Version", default=1)
     status = models.PositiveIntegerField(choices=post_choices.choices, default=post_choices.PUBLISHED)

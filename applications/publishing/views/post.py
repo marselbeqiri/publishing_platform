@@ -6,13 +6,14 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 
+from applications.common.serializers import LabelChoiceField
 from applications.publishing.applications import Registry
+from applications.publishing.filters import PostFilter
+from applications.publishing.typing import DataclassProtocol
 
 __all__ = [
     "PostViewSet",
 ]
-
-from applications.publishing.typing import DataclassProtocol
 
 PostApplication = Registry.PostApplication
 
@@ -22,7 +23,10 @@ class PostReadSerializer(serializers.Serializer):
     title = serializers.CharField()
     content = serializers.CharField()
     slug = serializers.CharField()
+    created_at = serializers.DateTimeField()
     status = serializers.ChoiceField(choices=PostApplication.aggregate_status_choices)
+    status_label = LabelChoiceField(choices=PostApplication.aggregate_status_choices.choices, source="status")
+    author = serializers.StringRelatedField(source="user")
 
 
 class PostWriteSerializer(serializers.Serializer):
@@ -40,6 +44,15 @@ class PostViewSet(ModelViewSet):
     application = PostApplication
     queryset = application.list()
     post_status_choices = PostApplication.aggregate_status_choices
+    filterset_class = PostFilter
+    ordering_fields = [
+        'created_at',
+        'title',
+        'content',
+        'status',
+        'user',
+        'user__first_name',
+    ]
 
     def get_serializer_class(self):
         serializers_ = {

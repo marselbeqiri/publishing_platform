@@ -104,7 +104,7 @@ class EventStore(IEventStore):
         )
 
     def create_aggregate(self, aggregate: AggregateType):
-        data = {key: value for key, value in aggregate.as_dict.items() if value}
+        data = {key: value for key, value in aggregate.as_dict().items() if value}
         return self.aggregate_store_model.objects.create(**data)
 
     def get_aggregate(self, aggregate_id: str):
