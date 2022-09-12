@@ -1,10 +1,11 @@
 from django.http import Http404
 from rest_framework import serializers, status
-from rest_framework.generics import CreateAPIView, RetrieveUpdateDestroyAPIView, UpdateAPIView
+from rest_framework.generics import CreateAPIView, RetrieveUpdateDestroyAPIView, UpdateAPIView, ListAPIView
 from rest_framework.permissions import BasePermission
 from rest_framework.response import Response
 
 from applications.authentication.models import User
+from applications.authentication.models.user import Interest
 from applications.authentication.serializers import RegistrationSerializer, UserInfoSerializer
 
 
@@ -40,6 +41,17 @@ class UserAPIView(CreateAPIView, RetrieveUpdateDestroyAPIView):
         super_context = super().get_exception_handler_context()
         super_context['password_action'] = True
         return super_context
+
+
+class InterestsListAPIView(ListAPIView, CreateAPIView, RetrieveUpdateDestroyAPIView):
+    class InterestSerializer(serializers.ModelSerializer):
+        class Meta:
+            model = Interest
+            fields = "__all__"
+
+    queryset = Interest.objects.all()
+    serializer_class = InterestSerializer
+    pagination_class = None
 
 
 class ChangePasswordView(UpdateAPIView):
@@ -89,4 +101,5 @@ class ChangePasswordView(UpdateAPIView):
 
 
 user_view = UserAPIView.as_view()
+interests_view = InterestsListAPIView.as_view()
 change_password_view = ChangePasswordView.as_view()

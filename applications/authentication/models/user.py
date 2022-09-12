@@ -2,6 +2,7 @@ from django.contrib.auth.models import AbstractUser
 from django.db import models
 
 from applications.authentication.constants import GROUPS
+from applications.authentication.models import Interest
 from applications.authentication.models.user_manager import UserManager
 
 
@@ -13,6 +14,11 @@ class User(AbstractUser):
         "last_name",
     ]
     objects = UserManager()
+    short_biography = models.CharField(max_length=1000, blank=True)
+    birth_date = models.DateField(null=True)
+    country = models.CharField(max_length=100, blank=True)
+    city = models.CharField(max_length=100, blank=True)
+    interests = models.ManyToManyField(to=Interest, verbose_name="List of Interests")
 
     class Meta:
         verbose_name = "User"

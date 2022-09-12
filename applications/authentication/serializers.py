@@ -7,6 +7,7 @@ from rest_framework_simplejwt.serializers import (
 )
 
 from applications.authentication.models import User
+from applications.common.serializers import NonNullableCharField
 
 
 class TokenObtainPairSerializer(ParentTokenObtainPairSerializer):
@@ -27,19 +28,35 @@ class TokenRefreshSerializer(ParentTokenRefreshSerializer):
 
 
 class UserInfoSerializer(serializers.ModelSerializer):
+    # Read Fields
     full_name = serializers.CharField(read_only=True, source="get_full_name")
+    list_of_interests = serializers.StringRelatedField(many=True, source='interests', read_only=True)
     groups = serializers.StringRelatedField(many=True, read_only=True)
+
+    # Write Fields
+    short_biography = NonNullableCharField(allow_blank=True, required=False)
+    country = NonNullableCharField(allow_blank=True, required=False)
+    city = NonNullableCharField(allow_blank=True, required=False)
 
     class Meta:
         model = User
         fields = [
             "id",
+            "full_name",
+            "groups",
+            "list_of_interests",
+            # Write Fields
             "first_name",
             "last_name",
             "email",
-            "full_name",
-            "groups",
+            "short_biography",
+            "birth_date",
+            "country",
+            "city",
+            "interests",
         ]
+        extra_kwargs = {'interests': {'write_only': True, 'required': False}}
+
 
 
 class RegistrationSerializer(serializers.ModelSerializer):
