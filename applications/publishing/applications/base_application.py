@@ -5,7 +5,7 @@ from django.db.transaction import atomic
 from rest_framework import exceptions
 
 from applications.common.utils import get_dataclass_fields
-from applications.publishing.event_store import EventStore
+from applications.common.event_source.event_store import EventStore
 from applications.publishing.typing import RawData, DataclassProtocol
 
 
