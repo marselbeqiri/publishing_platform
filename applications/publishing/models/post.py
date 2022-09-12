@@ -20,7 +20,7 @@ class Post(AggregateModel):
     slug = models.CharField(verbose_name="Post slug", max_length=255)
     version = models.PositiveIntegerField(verbose_name="Event Version", default=1)
     status = models.PositiveIntegerField(choices=post_choices.choices, default=post_choices.PUBLISHED)
-    author = models.ForeignKey(
+    user = models.ForeignKey(
         verbose_name="Author",
         to="authentication.User",
         related_name="posts",
@@ -32,14 +32,6 @@ class Post(AggregateModel):
         verbose_name = "User Post"
         verbose_name_plural = "User Posts"
         ordering = ["created_at"]
-
-    @property
-    def user_id(self):
-        return self.action_by
-
-    @user_id.setter
-    def user_id(self, user_id: id):
-        self.action_by = user_id
 
 
 class EventPostChoices(models.TextChoices):

@@ -74,6 +74,7 @@ class PostViewSet(ModelViewSet):
             "aggregate_id": serializer.instance.id
         }
         self.application.edit(raw_data)
+        serializer.instance.refresh_from_db()
 
     def perform_destroy(self, instance):
         raw_data = {

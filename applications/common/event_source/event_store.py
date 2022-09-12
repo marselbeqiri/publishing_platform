@@ -44,6 +44,10 @@ class AggregateType(typing.Protocol):
 
     as_dict: dict
 
+    @abc.abstractmethod
+    def as_dict(self):
+        raise NotImplementedError
+
 
 class EventStore(IEventStore):
     aggregate_store_model: typing.Any
@@ -80,15 +84,14 @@ class EventStore(IEventStore):
             self,
             aggregate_uuid: str,
             event: dataclasses.dataclass,
+            aggregate_data: dict,
             expected_version: int = None
     ):
         if expected_version:  # update
-            data_to_update = dataclasses.asdict(event)
-            data_to_update['action_by'] = data_to_update.pop('user_id')
             row_count = (
                 self.aggregate_model.objects
                 .filter(id=aggregate_uuid, version=expected_version)
-                .update(version=expected_version + 1, **data_to_update)
+                .update(version=expected_version + 1, **aggregate_data)
             )
             if row_count != 1:  # should be one
                 msg = "Concurrent Race condition error. Retry!"
@@ -111,6 +114,5 @@ class EventStore(IEventStore):
         return (
             self.aggregate_store_model.objects
             .filter(aggregate_id=aggregate_id)
-            .update(**aggregate.as_dict)
+            .update(**aggregate.as_dict())
         )
-

@@ -1,11 +1,12 @@
-from typing import Any, ClassVar
+from typing import Any, ClassVar, Type
 
 from django.db.models import QuerySet
 from django.db.transaction import atomic
 from rest_framework import exceptions
 
-from applications.common.utils import get_dataclass_fields
+from applications.common.event_source.domainmodel import AggregateBase
 from applications.common.event_source.event_store import EventStore
+from applications.common.utils import get_dataclass_fields
 from applications.publishing.typing import RawData, DataclassProtocol
 
 
@@ -40,7 +41,8 @@ class BaseApplicationMixin:
             self.event_store.append_to_stream(
                 aggregate_uuid=raw_data['aggregate_id'],
                 event=aggregate.last_event,
-                expected_version=expected_version
+                expected_version=expected_version,
+                aggregate_data=aggregate.as_dict()
             )
 
     @classmethod
@@ -54,7 +56,7 @@ class BaseApplicationMixin:
 
 
 class EventsApplication(BaseApplicationMixin):
-    aggregate_class: ClassVar = None
+    aggregate_class: ClassVar[Type[AggregateBase]] = None
     aggregate_store_model: ClassVar = None
     event_store_model: ClassVar = None
 
@@ -68,6 +70,7 @@ class EventsApplication(BaseApplicationMixin):
         self.event_store.append_to_stream(
             aggregate_uuid=aggregate.id,
             event=post.last_event,
+            aggregate_data=post.as_dict()
         )
         return aggregate
 

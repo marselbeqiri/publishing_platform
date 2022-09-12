@@ -119,14 +119,13 @@ class PostAggregate(AggregateBase):
     action_by: int
     version: int
 
-    @property
     def as_dict(self):
         return dict(
             title=self.title,
             content=self.content,
             slug=self.slug,
             status=getattr(self, 'status', None),
-            author_id=self.creator_id,
+            user_id=self.creator_id,
             action_by=self.action_by,
             deleted=getattr(self, 'deleted', False)
         )
