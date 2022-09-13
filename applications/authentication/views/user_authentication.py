@@ -21,7 +21,7 @@ class UserCRUDPermission(BasePermission):
 
 
 class UserAPIView(CreateAPIView, RetrieveUpdateDestroyAPIView):
-    queryset = User.objects.all()
+    queryset = User.objects.prefetch_related("interests", "subscribers", "subscriptions", "posts")
     serializer_class = UserInfoSerializer
     permission_classes = (UserCRUDPermission,)
 

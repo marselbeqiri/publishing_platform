@@ -33,6 +33,8 @@ class UserInfoSerializer(serializers.ModelSerializer):
     list_of_interests = serializers.StringRelatedField(many=True, source='interests', read_only=True)
     groups = serializers.StringRelatedField(many=True, read_only=True)
     total_posts = serializers.IntegerField(read_only=True)
+    total_subscriptions = serializers.IntegerField(read_only=True)
+    total_subscribers = serializers.IntegerField(read_only=True)
 
     # Write Fields
     short_biography = NonNullableCharField(allow_blank=True, required=False)
@@ -56,6 +58,8 @@ class UserInfoSerializer(serializers.ModelSerializer):
             "country",
             "city",
             "interests",
+            "total_subscriptions",
+            "total_subscribers",
         ]
         extra_kwargs = {'interests': {'write_only': True, 'required': False}}
 
