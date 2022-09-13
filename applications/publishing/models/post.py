@@ -33,6 +33,9 @@ class Post(AggregateModel):
         verbose_name_plural = "User Posts"
         ordering = ["created_at"]
 
+    def __str__(self):
+        return self.title
+
 
 class EventPostChoices(models.TextChoices):
     PUBLISH: str = "PUBLISH"

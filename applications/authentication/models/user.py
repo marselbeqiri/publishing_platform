@@ -36,3 +36,16 @@ class User(AbstractUser):
     @property
     def total_posts(self):
         return self.posts.count()
+
+    def total_subscribers(self):
+        return self.subscribers.all().count()
+
+    def total_subscriptions(self):
+        return self.subscriptions.all().count()
+
+    def last_five_posts(self):
+        return self.get_published_posts()[:5]
+
+    def get_published_posts(self):
+        PostModel = self.posts.model
+        return self.posts.filter(status=PostModel.post_choices.PUBLISHED)
