@@ -2,6 +2,7 @@ import dataclasses
 import functools
 
 from django.core.exceptions import ValidationError
+from django.http import Http404
 from django.shortcuts import get_object_or_404 as _get_object_or_404
 
 
@@ -12,7 +13,7 @@ def get_object_or_none(queryset, *filter_args, **filter_kwargs):
     """
     try:
         return _get_object_or_404(queryset, *filter_args, **filter_kwargs)
-    except (TypeError, ValueError, ValidationError):
+    except (TypeError, ValueError, ValidationError, Http404):
         return None
 
 
