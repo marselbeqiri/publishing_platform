@@ -1,6 +1,6 @@
 from django.contrib.auth import get_user_model
 from drf_yasg.utils import swagger_auto_schema
-from rest_framework import serializers, status, mixins
+from rest_framework import serializers, status, mixins, exceptions
 from rest_framework.decorators import action
 from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
@@ -79,8 +79,14 @@ class MemberViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin, GenericVie
         serializer.is_valid(raise_exception=True)
         subscribe_to = get_object_or_404(User, username=serializer.validated_data['username'])
 
+        if subscribe_to.id == request.user.id:
+            err_detail = {'username': ["You can't un-subscribe yourself."]}
+            raise exceptions.ValidationError(err_detail)
         if subscribe_instance := get_object_or_none(Subscribe, subscribe_to=subscribe_to, subscriber=request.user):
             subscribe_instance.delete()
+        if not subscribe_instance:
+            err_detail = {'username': ["You aren't subscribed to this user."]}
+            raise exceptions.ValidationError(err_detail)
 
         return Response(status=status.HTTP_204_NO_CONTENT)
 
