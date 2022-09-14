@@ -1,9 +1,12 @@
 import dataclasses
 import functools
+from typing import Type
 
 from django.core.exceptions import ValidationError
 from django.http import Http404
 from django.shortcuts import get_object_or_404 as _get_object_or_404
+from django_filters import rest_framework as filters
+from drf_yasg import openapi
 
 
 def get_object_or_none(queryset, *filter_args, **filter_kwargs):
@@ -31,3 +34,14 @@ def method_dispatch(func):
 def get_dataclass_fields(dataclass: dataclasses.dataclass) -> list:
     fields: dict = dataclass.__dataclass_fields__
     return list(fields.keys())
+
+
+def query_param_yasg(filter_class: Type[filters.FilterSet]):
+    return [
+        openapi.Parameter(
+            name=name,
+            in_=openapi.IN_QUERY,
+            type=openapi.TYPE_STRING
+        )
+        for name, filter_field in filter_class.declared_filters.items()
+    ]

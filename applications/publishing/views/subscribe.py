@@ -7,6 +7,7 @@ from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
 
 from applications.common.utils import get_object_or_none
+from applications.publishing.filters.subscribe import SubscribeFilter
 from applications.publishing.models import Subscribe
 from applications.publishing.serializers.member import MembersListSerializer, MembersDetailSerializer
 
@@ -29,11 +30,13 @@ class SubscribeSerializer(serializers.Serializer):
 
 class MemberViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin, GenericViewSet):
     queryset = User.objects.prefetch_related("interests", "subscribers", "subscriptions", "posts")
+    filterset_class = None
 
     @swagger_auto_schema(
         method='get',
+        responses={200: SubscribersSerializer(many=True)}
     )
-    @action(detail=False, methods=['get'], name='Get Subscribers')
+    @action(detail=False, methods=['get'], name='Get Subscribers', filter_backends=[])
     def subscribers(self, request):
         queryset = request.user.subscribers.all()
         serializer = self.get_serializer(queryset, many=True)
@@ -41,11 +44,15 @@ class MemberViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin, GenericVie
 
     @swagger_auto_schema(
         method='get',
+        responses={200: SubscribtionsSerializer(many=True)},
+        manual_parameters=SubscribeFilter.docs()
     )
     @action(detail=False, methods=['get'], name='Get subscriptions')
     def subscriptions(self, request):
-        queryset = request.user.subscriptions.all()
+        self.filterset_class = SubscribeFilter
+        queryset = self.filter_queryset(request.user.subscriptions.all()).distinct()
         serializer = self.get_serializer(queryset, many=True)
+        self.filterset_class = None
         return Response(serializer.data)
 
     @swagger_auto_schema(
