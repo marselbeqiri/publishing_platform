@@ -175,5 +175,4 @@ class TestSubscribeFeatures(BaseAPITestCase):
         new_user = baker.make("authentication.User", _fill_optional=True, username=self.faker.user_name())
         response = self.client.post(self.unsubscribe_url, {'username': new_user.username})
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        print(response.json())
         self.assertEqual(response.json(), {'username': ["You aren't subscribed to this user."]})
