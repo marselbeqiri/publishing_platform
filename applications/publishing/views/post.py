@@ -42,7 +42,7 @@ class ListResponse(serializers.ListSerializer):
 
 class PostViewSet(ModelViewSet):
     application = PostApplication
-    queryset = application.list()
+    queryset = application.list().filter(deleted=False)
     post_status_choices = PostApplication.aggregate_status_choices
     filterset_class = PostFilter
     ordering_fields = [

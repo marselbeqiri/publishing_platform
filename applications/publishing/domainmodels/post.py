@@ -170,4 +170,5 @@ class PostAggregate(AggregateBase):
     @_apply.register(DeletePost)
     def _(self, event: DeletePost):
         self.deleted = True
+        self.status = 3
         self.action_by = event.user_id
