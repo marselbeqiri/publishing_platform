@@ -1,4 +1,5 @@
 from django.contrib.auth import get_user_model
+from django.db.models import Count
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework import serializers, status, mixins, exceptions
 from rest_framework.decorators import action
@@ -39,6 +40,7 @@ class MemberViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin, GenericVie
             "subscribe": SubscribeSerializer,
             "unsubscribe": SubscribeSerializer,
             "list": MembersListSerializer,
+            "top": MembersListSerializer,
             "retrieve": MembersDetailSerializer,
         }
         return serializer_map[self.action]
@@ -100,3 +102,12 @@ class MemberViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin, GenericVie
             raise exceptions.ValidationError(err_detail)
 
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+    @action(detail=False, methods=['get'], name='Top Users', )
+    def top(self, _):
+        queryset = self.get_queryset().annotate(
+            user_total_posts=Count("posts"),
+            user_total_subscriptions=Count("subscriptions")
+        ).order_by("user_total_posts", "user_total_subscriptions")[:20]
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)

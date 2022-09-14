@@ -23,6 +23,8 @@ class MembersListSerializer(serializers.ModelSerializer):
     user_details = serializers.HyperlinkedIdentityField(
         view_name="member-detail",
     )
+    total_subscriptions = serializers.IntegerField(read_only=True)
+    total_subscribers = serializers.IntegerField(read_only=True)
 
     class Meta:
         model = User
@@ -36,7 +38,9 @@ class MembersListSerializer(serializers.ModelSerializer):
             "country",
             "city",
             "last_posts",
-            "user_details"
+            "user_details",
+            "total_subscriptions",
+            "total_subscribers",
         ]
 
 
