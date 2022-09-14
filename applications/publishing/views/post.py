@@ -1,5 +1,7 @@
 from dataclasses import asdict
 
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework import serializers, exceptions
 from rest_framework.decorators import action
@@ -7,6 +9,7 @@ from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 
 from applications.common.serializers import LabelChoiceField
+from applications.common.swagger import SwaggerExcludeParams
 from applications.publishing.applications import Registry
 from applications.publishing.filters import PostFilter
 from applications.publishing.typing import DataclassProtocol
@@ -110,3 +113,17 @@ class PostViewSet(ModelViewSet):
         ]
 
         return Response(json_response)
+
+    @method_decorator(cache_page(60 * 60 * 2))
+    @swagger_auto_schema(
+        method='get',
+        responses={200: "'label': 'db_value'"},
+        auto_schema=SwaggerExcludeParams,
+    )
+    @action(detail=False, methods=['get'], name='Get Fuel types', url_path="post-statuses")
+    def post_statuses(self, _):
+        data = [
+            {'key': label, 'value': value}
+            for value, label in self.post_status_choices.choices
+        ]
+        return Response(data=data)
