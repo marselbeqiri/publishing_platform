@@ -32,6 +32,17 @@ class MemberViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin, GenericVie
     queryset = User.objects.prefetch_related("interests", "subscribers", "subscriptions", "posts")
     filterset_class = None
 
+    def get_serializer_class(self):
+        serializer_map = {
+            "subscribers": SubscribersSerializer,
+            "subscriptions": SubscribtionsSerializer,
+            "subscribe": SubscribeSerializer,
+            "unsubscribe": SubscribeSerializer,
+            "list": MembersListSerializer,
+            "retrieve": MembersDetailSerializer,
+        }
+        return serializer_map[self.action]
+
     @swagger_auto_schema(
         method='get',
         responses={200: SubscribersSerializer(many=True)}
@@ -89,14 +100,3 @@ class MemberViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin, GenericVie
             raise exceptions.ValidationError(err_detail)
 
         return Response(status=status.HTTP_204_NO_CONTENT)
-
-    def get_serializer_class(self):
-        serializer_map = {
-            "subscribers": SubscribersSerializer,
-            "subscriptions": SubscribtionsSerializer,
-            "subscribe": SubscribeSerializer,
-            "unsubscribe": SubscribeSerializer,
-            "list": MembersListSerializer,
-            "retrieve": MembersDetailSerializer,
-        }
-        return serializer_map[self.action]

@@ -48,6 +48,7 @@ class TestUserGetRetrieveUpdate(APITestCase):
 
     def setUp(self) -> None:
         self.client.force_authenticate(user=self.user)
+        baker.make("authentication.Interest", _quantity=10)
 
     def test__user__data_put(self):
         old_first_name = self.user.first_name
@@ -56,6 +57,7 @@ class TestUserGetRetrieveUpdate(APITestCase):
             "first_name": self.faker.first_name(),
             "last_name": self.faker.last_name(),
             "email": self.faker.email(),
+            "interests": [1,]
         }
         response = self.client.put(
             path=reverse("user_view"),
