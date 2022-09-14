@@ -29,6 +29,9 @@ class SubscribeFilter(filters.FilterSet):
         return queryset.filter(subscribe_to__posts__content__icontains=value).distinct()
 
     def filter_by_usernames(self, queryset, name, value):
+        if not isinstance(value, list):
+            return queryset
+        value = value[:10]
         return queryset.filter(subscribe_to__username__in=value).distinct()
 
     @classmethod
