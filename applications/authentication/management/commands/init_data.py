@@ -2,19 +2,21 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group
 from django.core.management.base import BaseCommand
 from django.db import transaction
+from faker import Faker
+from model_bakery import baker
 
 from applications.authentication.constants import GROUPS
 
 
 class Command(BaseCommand):
     help = 'Create Init Data'
-    default_password = 'Demo@123!'
+    default_password = 'Demo@123!##'
 
     @transaction.atomic
     def handle(self, *args, **kwargs):
         admin_group, blogger_group = self.create_groups()
         user_model = get_user_model()
-
+        self.init_interests()
         if not user_model.objects.filter(username='admin').exists():
             admin = user_model.objects.create_superuser(
                 username='admin',
@@ -42,3 +44,11 @@ class Command(BaseCommand):
         blogger = Group.objects.get_or_create(name=GROUPS.BLOGGER)[0]
 
         return admin, blogger
+
+    def init_interests(self):
+        faker = Faker()
+        for index in range(100):
+            baker.make(
+                "authentication.Interest",
+                name=faker.catch_phrase()
+            )
