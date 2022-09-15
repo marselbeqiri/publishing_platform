@@ -29,4 +29,22 @@ model-bakery==1.6.0
 # Faker is a Python package that generates fake data for you.
 Faker==13.15.0
 
+# psycopg2 - Python-PostgreSQL Database Adapter
 psycopg2==2.9.3
+
+# HTTP Server for UNIX, fast clients and sleepy applications.
+gunicorn==20.1.0
+
+
+
+
+
+
+
+
+
+
+
+
+
+
