@@ -1,0 +1,1100 @@
+swagger: '2.0'
+info:
+  title: Publishing Platform API
+  description: Test description
+  termsOfService: https://www.google.com/policies/terms/
+  contact:
+    email: marselbeqiri.365@gmail.com
+  license:
+    name: BSD License
+  version: v1
+host: 0.0.0.0:8000
+schemes:
+  - http
+basePath: /api
+consumes:
+  - application/json
+produces:
+  - application/json
+securityDefinitions:
+  Bearer:
+    type: apiKey
+    name: Authorization
+    in: header
+security:
+  - Bearer: []
+paths:
+  /auth/token/:
+    post:
+      operationId: auth_token_create
+      description: |-
+        Takes a set of user credentials and returns an access and refresh JSON web
+        token pair to prove the authentication of those credentials.
+      parameters:
+        - name: data
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/TokenObtainPair'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/TokenObtainPair'
+      tags:
+        - auth
+    parameters: []
+  /auth/token/refresh/:
+    post:
+      operationId: auth_token_refresh_create
+      description: |-
+        Takes a refresh type JSON web token and returns an access type JSON web
+        token if the refresh token is valid.
+      parameters:
+        - name: data
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/TokenRefresh'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/TokenRefresh'
+      tags:
+        - auth
+    parameters: []
+  /auth/user/:
+    get:
+      operationId: auth_user_read
+      description: ''
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/UserInfo'
+      tags:
+        - auth
+    post:
+      operationId: auth_user_create
+      description: ''
+      parameters:
+        - name: data
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/Registration'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/Registration'
+      tags:
+        - auth
+    put:
+      operationId: auth_user_update
+      description: ''
+      parameters:
+        - name: data
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/UserInfo'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/UserInfo'
+      tags:
+        - auth
+    patch:
+      operationId: auth_user_partial_update
+      description: ''
+      parameters:
+        - name: data
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/UserInfo'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/UserInfo'
+      tags:
+        - auth
+    delete:
+      operationId: auth_user_delete
+      description: ''
+      parameters: []
+      responses:
+        '204':
+          description: ''
+      tags:
+        - auth
+    parameters: []
+  /auth/user/change-password/:
+    put:
+      operationId: auth_user_change-password_update
+      description: An endpoint for changing password.
+      parameters:
+        - name: data
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/ChangePassword'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/ChangePassword'
+      tags:
+        - auth
+    patch:
+      operationId: auth_user_change-password_partial_update
+      description: An endpoint for changing password.
+      parameters:
+        - name: data
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/ChangePassword'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/ChangePassword'
+      tags:
+        - auth
+    parameters: []
+  /auth/user/interests/:
+    get:
+      operationId: auth_user_interests_read
+      description: ''
+      parameters:
+        - name: ordering
+          in: query
+          description: Which field to use when ordering the results.
+          required: false
+          type: string
+      responses:
+        '200':
+          description: ''
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Interest'
+      tags:
+        - auth
+    post:
+      operationId: auth_user_interests_create
+      description: ''
+      parameters:
+        - name: data
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/Interest'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/Interest'
+      tags:
+        - auth
+    put:
+      operationId: auth_user_interests_update
+      description: ''
+      parameters:
+        - name: data
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/Interest'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/Interest'
+      tags:
+        - auth
+    patch:
+      operationId: auth_user_interests_partial_update
+      description: ''
+      parameters:
+        - name: data
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/Interest'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/Interest'
+      tags:
+        - auth
+    delete:
+      operationId: auth_user_interests_delete
+      description: ''
+      parameters: []
+      responses:
+        '204':
+          description: ''
+      tags:
+        - auth
+    parameters: []
+  /publishing/members/:
+    get:
+      operationId: publishing_members_list
+      description: ''
+      parameters:
+        - name: ordering
+          in: query
+          description: Which field to use when ordering the results.
+          required: false
+          type: string
+        - name: page
+          in: query
+          description: A page number within the paginated result set.
+          required: false
+          type: integer
+        - name: page_size
+          in: query
+          description: Number of results to return per page.
+          required: false
+          type: integer
+      responses:
+        '200':
+          description: ''
+          schema:
+            required:
+              - count
+              - results
+            type: object
+            properties:
+              count:
+                type: integer
+              next:
+                type: string
+                format: uri
+                x-nullable: true
+              previous:
+                type: string
+                format: uri
+                x-nullable: true
+              results:
+                type: array
+                items:
+                  $ref: '#/definitions/MembersList'
+      tags:
+        - publishing
+    parameters: []
+  /publishing/members/subscribe/:
+    post:
+      operationId: publishing_members_subscribe
+      description: ''
+      parameters:
+        - name: data
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/Subscribe'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/Subscribe'
+      tags:
+        - publishing
+    parameters: []
+  /publishing/members/subscribers/:
+    get:
+      operationId: publishing_members_subscribers
+      description: ''
+      parameters:
+        - name: page
+          in: query
+          description: A page number within the paginated result set.
+          required: false
+          type: integer
+        - name: page_size
+          in: query
+          description: Number of results to return per page.
+          required: false
+          type: integer
+      responses:
+        '200':
+          description: ''
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Subscribers'
+      tags:
+        - publishing
+    parameters: []
+  /publishing/members/subscriptions/:
+    get:
+      operationId: publishing_members_subscriptions
+      description: ''
+      parameters:
+        - name: ordering
+          in: query
+          description: Which field to use when ordering the results.
+          required: false
+          type: string
+        - name: page
+          in: query
+          description: A page number within the paginated result set.
+          required: false
+          type: integer
+        - name: page_size
+          in: query
+          description: Number of results to return per page.
+          required: false
+          type: integer
+        - name: usernames
+          in: query
+          description: String csv query param, which is used to have multiple search
+          type: string
+        - name: username
+          in: query
+          description: Search by specified username
+          type: string
+        - name: post_title
+          in: query
+          description: Search by subscriber post title contains
+          type: string
+        - name: post_content
+          in: query
+          description: Search by subscriber post content contains
+          type: string
+        - name: start_date
+          in: query
+          description: Filter by subscriber post after given created date
+          type: string
+        - name: end_date
+          in: query
+          description: Filter by subscriber post before given data
+          type: string
+      responses:
+        '200':
+          description: ''
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Subscribtions'
+      tags:
+        - publishing
+    parameters: []
+  /publishing/members/top/:
+    get:
+      operationId: publishing_members_top
+      description: ''
+      parameters:
+        - name: ordering
+          in: query
+          description: Which field to use when ordering the results.
+          required: false
+          type: string
+        - name: page
+          in: query
+          description: A page number within the paginated result set.
+          required: false
+          type: integer
+        - name: page_size
+          in: query
+          description: Number of results to return per page.
+          required: false
+          type: integer
+      responses:
+        '200':
+          description: ''
+          schema:
+            required:
+              - count
+              - results
+            type: object
+            properties:
+              count:
+                type: integer
+              next:
+                type: string
+                format: uri
+                x-nullable: true
+              previous:
+                type: string
+                format: uri
+                x-nullable: true
+              results:
+                type: array
+                items:
+                  $ref: '#/definitions/MembersList'
+      tags:
+        - publishing
+    parameters: []
+  /publishing/members/unsubscribe/:
+    post:
+      operationId: publishing_members_unsubscribe
+      description: ''
+      parameters:
+        - name: data
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/Subscribe'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/Subscribe'
+      tags:
+        - publishing
+    parameters: []
+  /publishing/members/{id}/:
+    get:
+      operationId: publishing_members_read
+      description: ''
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/MembersDetail'
+      tags:
+        - publishing
+    parameters:
+      - name: id
+        in: path
+        description: A unique integer value identifying this User.
+        required: true
+        type: integer
+  /publishing/post/:
+    get:
+      operationId: publishing_post_list
+      description: ''
+      parameters:
+        - name: created_at
+          in: query
+          description: ''
+          required: false
+          type: string
+        - name: updated_at
+          in: query
+          description: ''
+          required: false
+          type: string
+        - name: deleted
+          in: query
+          description: ''
+          required: false
+          type: string
+        - name: id
+          in: query
+          description: ''
+          required: false
+          type: string
+        - name: title
+          in: query
+          description: ''
+          required: false
+          type: string
+        - name: content
+          in: query
+          description: ''
+          required: false
+          type: string
+        - name: slug
+          in: query
+          description: ''
+          required: false
+          type: string
+        - name: version
+          in: query
+          description: ''
+          required: false
+          type: number
+        - name: status
+          in: query
+          description: ''
+          required: false
+          type: number
+        - name: user
+          in: query
+          description: ''
+          required: false
+          type: number
+        - name: action_by
+          in: query
+          description: ''
+          required: false
+          type: number
+        - name: date
+          in: query
+          description: ''
+          required: false
+          type: string
+        - name: ordering
+          in: query
+          description: Which field to use when ordering the results.
+          required: false
+          type: string
+        - name: page
+          in: query
+          description: A page number within the paginated result set.
+          required: false
+          type: integer
+        - name: page_size
+          in: query
+          description: Number of results to return per page.
+          required: false
+          type: integer
+      responses:
+        '200':
+          description: ''
+          schema:
+            required:
+              - count
+              - results
+            type: object
+            properties:
+              count:
+                type: integer
+              next:
+                type: string
+                format: uri
+                x-nullable: true
+              previous:
+                type: string
+                format: uri
+                x-nullable: true
+              results:
+                type: array
+                items:
+                  $ref: '#/definitions/PostRead'
+      tags:
+        - publishing
+    post:
+      operationId: publishing_post_create
+      description: ''
+      parameters:
+        - name: data
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/PostWrite'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/PostWrite'
+      tags:
+        - publishing
+    parameters: []
+  /publishing/post/post-statuses/:
+    get:
+      operationId: publishing_post_post_statuses
+      description: ''
+      parameters: []
+      responses:
+        '200':
+          description: "'label': 'db_value'"
+      tags:
+        - publishing
+    parameters: []
+  /publishing/post/{id}/:
+    get:
+      operationId: publishing_post_read
+      description: ''
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/PostRead'
+      tags:
+        - publishing
+    put:
+      operationId: publishing_post_update
+      description: ''
+      parameters:
+        - name: data
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/PostWrite'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/PostWrite'
+      tags:
+        - publishing
+    patch:
+      operationId: publishing_post_partial_update
+      description: ''
+      parameters:
+        - name: data
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/PostWrite'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/PostWrite'
+      tags:
+        - publishing
+    delete:
+      operationId: publishing_post_delete
+      description: ''
+      parameters: []
+      responses:
+        '204':
+          description: ''
+      tags:
+        - publishing
+    parameters:
+      - name: id
+        in: path
+        description: A UUID string identifying this User Post.
+        required: true
+        type: string
+        format: uuid
+  /publishing/post/{id}/logs/:
+    get:
+      operationId: publishing_post_logs
+      description: ''
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/PostWrite'
+      tags:
+        - publishing
+    parameters:
+      - name: id
+        in: path
+        description: A UUID string identifying this User Post.
+        required: true
+        type: string
+        format: uuid
+definitions:
+  TokenObtainPair:
+    required:
+      - username
+      - password
+    type: object
+    properties:
+      username:
+        title: Username
+        type: string
+        minLength: 1
+      password:
+        title: Password
+        type: string
+        minLength: 1
+  TokenRefresh:
+    required:
+      - refresh
+    type: object
+    properties:
+      refresh:
+        title: Refresh
+        type: string
+        minLength: 1
+      access:
+        title: Access
+        type: string
+        readOnly: true
+        minLength: 1
+  UserInfo:
+    type: object
+    properties:
+      id:
+        title: ID
+        type: integer
+        readOnly: true
+      full_name:
+        title: Full name
+        type: string
+        readOnly: true
+        minLength: 1
+      groups:
+        type: array
+        items:
+          type: string
+        readOnly: true
+        uniqueItems: true
+      list_of_interests:
+        type: array
+        items:
+          type: string
+        readOnly: true
+        uniqueItems: true
+      total_posts:
+        title: Total posts
+        type: integer
+        readOnly: true
+      first_name:
+        title: First name
+        type: string
+        maxLength: 150
+      last_name:
+        title: Last name
+        type: string
+        maxLength: 150
+      email:
+        title: Email
+        type: string
+        format: email
+        maxLength: 254
+      short_biography:
+        title: Short biography
+        type: string
+      birth_date:
+        title: Birth date
+        type: string
+        format: date
+        x-nullable: true
+      country:
+        title: Country
+        type: string
+      city:
+        title: City
+        type: string
+      interests:
+        type: array
+        items:
+          title: List of Interests
+          type: integer
+        uniqueItems: true
+      total_subscriptions:
+        title: Total subscriptions
+        type: integer
+        readOnly: true
+      total_subscribers:
+        title: Total subscribers
+        type: integer
+        readOnly: true
+  Registration:
+    required:
+      - username
+      - password
+    type: object
+    properties:
+      username:
+        title: Username
+        description: Required. 150 characters or fewer. Letters, digits and @/./+/-/_
+          only.
+        type: string
+        pattern: ^[\w.@+-]+$
+        maxLength: 150
+        minLength: 1
+      email:
+        title: Email
+        type: string
+        format: email
+        maxLength: 254
+      first_name:
+        title: First name
+        type: string
+        maxLength: 150
+      last_name:
+        title: Last name
+        type: string
+        maxLength: 150
+      password:
+        title: Password
+        type: string
+        maxLength: 128
+        minLength: 10
+  ChangePassword:
+    required:
+      - old_password
+      - new_password
+    type: object
+    properties:
+      old_password:
+        title: Old password
+        type: string
+        minLength: 1
+      new_password:
+        title: New password
+        type: string
+        minLength: 1
+  Interest:
+    required:
+      - name
+    type: object
+    properties:
+      id:
+        title: ID
+        type: integer
+        readOnly: true
+      name:
+        title: Name
+        type: string
+        maxLength: 150
+        minLength: 1
+  MemberPost:
+    required:
+      - id
+      - title
+      - slug
+      - created_at
+    type: object
+    properties:
+      id:
+        title: Id
+        type: string
+        minLength: 1
+      title:
+        title: Title
+        type: string
+        minLength: 1
+      slug:
+        title: Slug
+        type: string
+        minLength: 1
+      created_at:
+        title: Created at
+        type: string
+        format: date-time
+      author:
+        title: Author
+        type: string
+        readOnly: true
+      post_url:
+        title: Post url
+        type: string
+        format: uri
+        readOnly: true
+  MembersList:
+    required:
+      - last_posts
+    type: object
+    properties:
+      id:
+        title: ID
+        type: integer
+        readOnly: true
+      full_name:
+        title: Full name
+        type: string
+        readOnly: true
+        minLength: 1
+      list_of_interests:
+        type: array
+        items:
+          type: string
+        readOnly: true
+        uniqueItems: true
+      total_posts:
+        title: Total posts
+        type: integer
+        readOnly: true
+      short_biography:
+        title: Short biography
+        type: string
+        maxLength: 1000
+      birth_date:
+        title: Birth date
+        type: string
+        format: date
+        x-nullable: true
+      country:
+        title: Country
+        type: string
+        maxLength: 100
+      city:
+        title: City
+        type: string
+        maxLength: 100
+      last_posts:
+        type: array
+        items:
+          $ref: '#/definitions/MemberPost'
+      user_details:
+        title: User details
+        type: string
+        format: uri
+        readOnly: true
+      total_subscriptions:
+        title: Total subscriptions
+        type: integer
+        readOnly: true
+      total_subscribers:
+        title: Total subscribers
+        type: integer
+        readOnly: true
+  Subscribe:
+    required:
+      - username
+    type: object
+    properties:
+      username:
+        title: Username
+        type: string
+        minLength: 1
+  Subscribers:
+    type: object
+    properties:
+      subscribed_at:
+        title: Subscribed at
+        type: string
+        format: date-time
+        readOnly: true
+      subscriber_username:
+        title: Subscriber username
+        type: string
+        readOnly: true
+        minLength: 1
+  Subscribtions:
+    type: object
+    properties:
+      subscribed_at:
+        title: Subscribed at
+        type: string
+        format: date-time
+        readOnly: true
+      subscription_username:
+        title: Subscription username
+        type: string
+        readOnly: true
+        minLength: 1
+  MembersDetail:
+    required:
+      - last_posts
+    type: object
+    properties:
+      id:
+        title: ID
+        type: integer
+        readOnly: true
+      full_name:
+        title: Full name
+        type: string
+        readOnly: true
+        minLength: 1
+      list_of_interests:
+        type: array
+        items:
+          type: string
+        readOnly: true
+        uniqueItems: true
+      total_posts:
+        title: Total posts
+        type: integer
+        readOnly: true
+      short_biography:
+        title: Short biography
+        type: string
+        maxLength: 1000
+      birth_date:
+        title: Birth date
+        type: string
+        format: date
+        x-nullable: true
+      country:
+        title: Country
+        type: string
+        maxLength: 100
+      city:
+        title: City
+        type: string
+        maxLength: 100
+      last_posts:
+        type: array
+        items:
+          $ref: '#/definitions/MemberPost'
+      total_subscriptions:
+        title: Total subscriptions
+        type: integer
+        readOnly: true
+      total_subscribers:
+        title: Total subscribers
+        type: integer
+        readOnly: true
+  PostRead:
+    required:
+      - id
+      - title
+      - content
+      - slug
+      - created_at
+      - status
+      - status_label
+    type: object
+    properties:
+      id:
+        title: Id
+        type: string
+        minLength: 1
+      title:
+        title: Title
+        type: string
+        minLength: 1
+      content:
+        title: Content
+        type: string
+        minLength: 1
+      slug:
+        title: Slug
+        type: string
+        minLength: 1
+      created_at:
+        title: Created at
+        type: string
+        format: date-time
+      status:
+        title: Status
+        type: integer
+        enum:
+          - 0
+          - 1
+          - 2
+          - 3
+      status_label:
+        title: Status label
+        type: string
+        enum:
+          - Published
+          - Draft
+          - Archived
+          - Deleted
+      author:
+        title: Author
+        type: string
+        readOnly: true
+  PostWrite:
+    required:
+      - title
+      - content
+      - slug
+      - status
+    type: object
+    properties:
+      title:
+        title: Title
+        type: string
+        minLength: 1
+      content:
+        title: Content
+        type: string
+        minLength: 1
+      slug:
+        title: Slug
+        type: string
+        minLength: 1
+      status:
+        title: Status
+        type: integer
+        enum:
+          - 0
+          - 1
+          - 2
+          - 3
