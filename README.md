@@ -1,3 +1,5 @@
+Ready-To-Deploy Django, gunicorn, NGINX, Docker Application
+
 # publishing_platform
 
 ### Setup
