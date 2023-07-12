@@ -1,7 +1,7 @@
 #### BASE REQUIREMENTS ####
 
 # The Python web framework on which this app is built
-Django==4.1.1
+Django==4.1.10
 
 # A REST API framework for Django projects
 djangorestframework==3.13.1
